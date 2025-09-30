@@ -5,16 +5,20 @@ import express from "express";
 const app = express();
 
 (async () => {
+    console.log("main func")
     const { browser, page } = await connect({
         headless: true, // Run the browser in headless mode
         args: ["--single-process", "--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu", "--no-zygote", "--disable-dev-shm-usage"],
         plugins: [StealthPlugin()],
+        disableXvfb: true,
         customConfig: {
             chromePath: "./google-chrome-stable",
         },
     });
+    console.log("browser started")
 
     await page.goto("https://example.com");
+    console.log("page loaded")
 
     app.get("/", async (req, res) => {
         try {
@@ -28,7 +32,7 @@ const app = express();
         }
     });
 
-    const port = process.env.PORT || 8080;
+    const port = process.env.PORT || 3000;
     // Start the server
     app.listen(port, () => {
         console.log(`Server is running on port ${port}`);
